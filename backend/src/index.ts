@@ -1,13 +1,16 @@
 import { config } from "dotenv";
 import express, { Application, NextFunction, Request, Response } from "express";
+import imagesRouter from "./routers/imagesRouter";
+import cors from "cors";
 
 config();
 
 const app: Application = express();
 
-app.get("/", (req: Request, res: Response, next: NextFunction) => {
-  res.send("Express server with TypeScript");
-});
+app.use(express.json());
+app.use(cors());
+
+app.use("/api/images", imagesRouter);
 
 const PORT = process.env.PORT || 3000;
 
