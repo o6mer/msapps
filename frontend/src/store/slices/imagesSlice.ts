@@ -28,7 +28,7 @@ export interface IImage {
 
 interface ImageState {
   images: IImage[];
-  category?: string;
+  category: string;
   page: number;
   maxPage: number;
   sortBy: string;

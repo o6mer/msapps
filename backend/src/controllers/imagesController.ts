@@ -1,27 +1,8 @@
 import axios from "axios";
 import { Request, Response } from "express";
 import { IImage } from "../types";
-
-const paginateResult = (arr: any[], page: number, limit: number) => {
-  //Calculating the range of images to return
-  const startIndex = (page - 1) * limit;
-  const endIndex = page * limit;
-
-  const result: {
-    images: any[];
-    maxPage: number;
-  } = { images: [], maxPage: 0 };
-
-  //Slicing the array in the correct range
-  const resultImages = arr.slice(startIndex, endIndex);
-
-  result.images = resultImages;
-
-  //Calculating the max amount of pages.
-  result.maxPage = Math.round(arr.length / limit);
-
-  return result;
-};
+import sortArray from "../utils/sortArray";
+import paginateResult from "../utils/paginate";
 
 export const getImages = async (req: Request, res: Response) => {
   const category = req.query.category;
@@ -36,17 +17,15 @@ export const getImages = async (req: Request, res: Response) => {
 
     const images: IImage[] = data.hits;
 
-    if (sortBy)
-      images.sort((a, b) =>
-        a[sortBy].toString().localeCompare(b[sortBy].toString())
-      );
+    //Sort if requierd
+    if (sortBy) sortArray(images, sortBy);
 
+    //Paginate the array
     const result = paginateResult(images, page, 9);
 
     res.status(200).json(result);
   } catch (err: any) {
     console.log(err);
-
     res.status(400).json({ message: err.message });
   }
 };
