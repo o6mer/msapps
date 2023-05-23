@@ -33,6 +33,7 @@ interface ImageState {
   maxPage: number;
   sortBy: string;
   error: string;
+  isLoading: boolean;
 }
 
 const initialState: ImageState = {
@@ -42,6 +43,7 @@ const initialState: ImageState = {
   maxPage: 1,
   sortBy: "id",
   error: "",
+  isLoading: false,
 };
 
 // Generic fetching function for the images
@@ -61,7 +63,7 @@ const fetchImages = async ({
 
     return response.data;
   } catch (err) {
-    alert(err);
+    alert(err.message);
   }
 };
 
@@ -71,17 +73,20 @@ export const changeCategory = createAsyncThunk(
   async (category: string, thunkApi) => {
     //Updating the state
     thunkApi.dispatch(setCategory({ category }));
+    thunkApi.dispatch(setIsLoading({ isLoading: true }));
 
     //Fetching the data
     try {
-      return await fetchImages({
+      const data = await fetchImages({
         ...thunkApi.getState().image,
         category,
       });
+      thunkApi.dispatch(setIsLoading({ isLoading: false }));
+      return data;
     } catch (err) {
       // Handle the error
       thunkApi.dispatch(setError(err.message));
-      throw err;
+      thunkApi.dispatch(setIsLoading({ isLoading: false }));
     }
   }
 );
@@ -92,6 +97,7 @@ export const getPrevPage = createAsyncThunk(
   async (_, thunkApi) => {
     //Getting the current state
     const imageState = thunkApi.getState().image;
+    thunkApi.dispatch(setIsLoading({ isLoading: true }));
 
     //Fetching the data
     try {
@@ -102,10 +108,12 @@ export const getPrevPage = createAsyncThunk(
 
       //Updating the state
       thunkApi.dispatch(setPrevPage());
+      thunkApi.dispatch(setIsLoading({ isLoading: false }));
+
       return data;
     } catch (err) {
       thunkApi.dispatch(setError(err.message));
-      throw err;
+      thunkApi.dispatch(setIsLoading({ isLoading: false }));
     }
   }
 );
@@ -115,6 +123,7 @@ export const getNextPage = createAsyncThunk(
   "images/nextPage",
   async (_, thunkApi) => {
     const imageState = thunkApi.getState().image;
+    thunkApi.dispatch(setIsLoading({ isLoading: true }));
 
     try {
       const data = await fetchImages({
@@ -124,10 +133,12 @@ export const getNextPage = createAsyncThunk(
 
       //Updating the state
       thunkApi.dispatch(setNextPage());
+      thunkApi.dispatch(setIsLoading({ isLoading: false }));
+
       return data;
     } catch (err) {
       thunkApi.dispatch(setError(err.message));
-      throw err;
+      thunkApi.dispatch(setIsLoading({ isLoading: false }));
     }
   }
 );
@@ -138,16 +149,20 @@ export const changeSortBy = createAsyncThunk(
   async (sortBy: string, thunkApi) => {
     //Updating the state
     thunkApi.dispatch(setSortBy({ sortBy }));
+    thunkApi.dispatch(setIsLoading({ isLoading: true }));
 
     try {
       // Fetching the data
-      return await fetchImages({
+      const data = await fetchImages({
         ...thunkApi.getState().image,
         sortBy,
       });
+      thunkApi.dispatch(setIsLoading({ isLoading: false }));
+      return data;
     } catch (err) {
       // Handle the error
       thunkApi.dispatch(setError(err.message));
+      thunkApi.dispatch(setIsLoading({ isLoading: false }));
       throw err;
     }
   }
@@ -173,6 +188,9 @@ export const ImageSlice = createSlice({
     setError: (state, action: PayloadAction<{ message: string }>) => {
       state.error = action.payload.message;
     },
+    setIsLoading: (state, action: PayloadAction<{ isLoading: boolean }>) => {
+      state.isLoading = action.payload.isLoading;
+    },
   },
   extraReducers: (builder) => {
     builder.addCase(changeCategory.fulfilled, (state, action) => {
@@ -192,5 +210,11 @@ export const ImageSlice = createSlice({
 });
 
 export default ImageSlice.reducer;
-export const { setPrevPage, setNextPage, setCategory, setSortBy, setError } =
-  ImageSlice.actions;
+export const {
+  setPrevPage,
+  setNextPage,
+  setCategory,
+  setSortBy,
+  setError,
+  setIsLoading,
+} = ImageSlice.actions;

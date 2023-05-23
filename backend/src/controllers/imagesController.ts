@@ -35,6 +35,8 @@ export const getImages: RequestHandler<
 
     images = data.hits;
   } catch (err: any) {
+    console.log(err.message);
+
     return res
       .status(421)
       .json({ message: "Failed fetching pixbay API. " + err.message });
@@ -49,7 +51,9 @@ export const getImages: RequestHandler<
       images: paginatedImages.data,
       maxPage: paginatedImages.maxPage,
     };
-  } catch (err) {
+  } catch (err: any) {
+    console.log(err.message);
+
     return res.status(500).json({ message: "Failed to procces the data" });
   }
 
