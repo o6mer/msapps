@@ -180,16 +180,13 @@ export const ImageSlice = createSlice({
       return { ...state, images, maxPage };
     });
     builder.addCase(getPrevPage.fulfilled, (state, action) => {
-      const { images } = action.payload;
-      return { ...state, images };
+      state.images = action.payload.images;
     });
     builder.addCase(getNextPage.fulfilled, (state, action) => {
-      const { images } = action.payload;
-      return { ...state, images };
+      state.images = action.payload.images;
     });
     builder.addCase(changeSortBy.fulfilled, (state, action) => {
-      const { images } = action.payload;
-      return { ...state, images };
+      state.images = action.payload.images;
     });
   },
 });
