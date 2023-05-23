@@ -7,9 +7,11 @@ config();
 
 const app: Application = express();
 
+//Configure the server
 app.use(express.json());
 app.use(cors());
 
+//Adding a router
 app.use("/api/images", imagesRouter);
 
 const PORT = process.env.PORT || 3000;

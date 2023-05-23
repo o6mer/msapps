@@ -1,8 +1,9 @@
 import { Router } from "express";
-import { getByCategory } from "../controllers/imagesController";
+import { getImages } from "../controllers/imagesController";
 
 const imagesRouter = Router();
 
-imagesRouter.get("/get-by-category/:category", getByCategory);
+//Setup the endpoint with the middleware
+imagesRouter.get("/get-images", getImages);
 
 export default imagesRouter;

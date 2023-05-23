@@ -1,10 +1,10 @@
 import React, { ChangeEvent, useRef, useState } from "react";
-import { useAppDispatch } from "../store/store";
-import { fetchImages } from "../store/slices/imagesSlice";
+import { useAppDispatch, useAppSelector } from "../store/store";
+import { changeCategory } from "../store/slices/imagesSlice";
 import Dialog from "./general/Dialog";
 
 const CategorySelector = () => {
-  const [selectedCategory, setSelectedCategory] = useState("");
+  const selectedCategory = useAppSelector((state) => state.image.category);
 
   const [isDialogOpen, setIsDialogOpen] = useState(false);
 
@@ -15,8 +15,9 @@ const CategorySelector = () => {
 
     if (!category) return;
 
-    setSelectedCategory(category);
-    dispatch(fetchImages(category));
+    console.log(category);
+
+    dispatch(changeCategory(category));
     setIsDialogOpen(false);
   };
 

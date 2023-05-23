@@ -1,15 +1,15 @@
 import { useEffect } from "react";
 import ImagesContainer from "./components/ImagesContainer";
 import { useAppDispatch } from "./store/store";
-import { fetchImages } from "./store/slices/imagesSlice";
 import CategorySelector from "./components/CategorySelector";
 import ImagePagination from "./components/ImagePagination";
+import { changeCategory } from "./store/slices/imagesSlice";
 
 function App() {
   const dispatch = useAppDispatch();
 
   useEffect(() => {
-    dispatch(fetchImages());
+    dispatch(changeCategory(""));
   }, [dispatch]);
 
   return (
