@@ -1,7 +1,7 @@
 import React, { ChangeEvent, useRef, useState } from "react";
-import { useAppDispatch, useAppSelector } from "../store/store";
-import { changeCategory } from "../store/slices/imagesSlice";
-import Dialog from "./general/Dialog";
+import { useAppDispatch, useAppSelector } from "../../../store/store";
+import { changeCategory } from "../../../store/slices/imagesSlice";
+import Dialog from "../../general/Dialog";
 
 const CategorySelector = () => {
   const selectedCategory = useAppSelector((state) => state.image.category);

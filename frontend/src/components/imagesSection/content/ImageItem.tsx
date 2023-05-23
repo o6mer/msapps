@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import { IImage } from "../store/slices/imagesSlice";
-import Dialog from "./general/Dialog";
+import { IImage } from "../../../store/slices/imagesSlice";
+import Dialog from "../../general/Dialog";
 
 interface Props {
   imageData: IImage;

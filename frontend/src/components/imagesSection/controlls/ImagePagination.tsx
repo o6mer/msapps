@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import { useAppDispatch, useAppSelector } from "../store/store";
-import { getNextPage, getPrevPage } from "../store/slices/imagesSlice";
+import { useAppDispatch, useAppSelector } from "../../../store/store";
+import { getNextPage, getPrevPage } from "../../../store/slices/imagesSlice";
 
 const ImagePagination = () => {
   const dispatch = useAppDispatch();
