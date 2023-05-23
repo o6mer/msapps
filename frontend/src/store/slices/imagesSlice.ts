@@ -1,5 +1,11 @@
-import { PayloadAction, createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import {
+  PayloadAction,
+  createSlice,
+  createAsyncThunk,
+  ThunkDispatch,
+} from "@reduxjs/toolkit";
 import axios from "axios";
+import { RootState } from "..//store";
 
 export interface IImage {
   id: number;
@@ -32,6 +38,7 @@ interface ImageState {
   page: number;
   maxPage: number;
   sortBy: string;
+  error: string;
 }
 
 const initialState: ImageState = {
@@ -40,6 +47,7 @@ const initialState: ImageState = {
   page: 1,
   maxPage: 1,
   sortBy: "id",
+  error: "",
 };
 
 // Generic fetching function for the images
@@ -70,11 +78,17 @@ export const changeCategory = createAsyncThunk(
     //Updating the state
     thunkApi.dispatch(setCategory({ category }));
 
-    //fetching the data
-    return await fetchImages({
-      ...thunkApi.getState().image,
-      page: 1,
-    });
+    //Fetching the data
+    try {
+      return await fetchImages({
+        ...thunkApi.getState().image,
+        category,
+      });
+    } catch (err) {
+      // Handle the error
+      thunkApi.dispatch(setError(err.message));
+      throw err;
+    }
   }
 );
 
@@ -86,14 +100,19 @@ export const getPrevPage = createAsyncThunk(
     const imageState = thunkApi.getState().image;
 
     //Fetching the data
-    const data = await fetchImages({
-      ...imageState,
-      page: imageState.page - 1,
-    });
+    try {
+      const data = await fetchImages({
+        ...imageState,
+        page: imageState.page - 1,
+      });
 
-    //Updating the state
-    thunkApi.dispatch(setPrevPage());
-    return data;
+      //Updating the state
+      thunkApi.dispatch(setPrevPage());
+      return data;
+    } catch (err) {
+      thunkApi.dispatch(setError(err.message));
+      throw err;
+    }
   }
 );
 
@@ -103,27 +122,40 @@ export const getNextPage = createAsyncThunk(
   async (_, thunkApi) => {
     const imageState = thunkApi.getState().image;
 
-    const data = await fetchImages({
-      ...imageState,
-      page: imageState.page + 1,
-    });
-    thunkApi.dispatch(setNextPage());
-    return data;
+    try {
+      const data = await fetchImages({
+        ...imageState,
+        page: imageState.page + 1,
+      });
+
+      //Updating the state
+      thunkApi.dispatch(setNextPage());
+      return data;
+    } catch (err) {
+      thunkApi.dispatch(setError(err.message));
+      throw err;
+    }
   }
 );
 
 //Thunk function to change the sorting of the images. Update the sate and fetch the data
 export const changeSortBy = createAsyncThunk(
-  "images/changeCategory",
+  "images/changeSortBy",
   async (sortBy: string, thunkApi) => {
     //Updating the state
     thunkApi.dispatch(setSortBy({ sortBy }));
 
-    //fetching the data
-    return await fetchImages({
-      ...thunkApi.getState().image,
-      sortBy,
-    });
+    try {
+      // Fetching the data
+      return await fetchImages({
+        ...thunkApi.getState().image,
+        sortBy,
+      });
+    } catch (err) {
+      // Handle the error
+      thunkApi.dispatch(setError(err.message));
+      throw err;
+    }
   }
 );
 
@@ -144,6 +176,9 @@ export const ImageSlice = createSlice({
     setSortBy: (state, action: PayloadAction<{ sortBy: string }>) => {
       state.sortBy = action.payload.sortBy;
     },
+    setError: (state, action: PayloadAction<{ message: string }>) => {
+      state.error = action.payload.message;
+    },
   },
   extraReducers: (builder) => {
     builder.addCase(changeCategory.fulfilled, (state, action) => {
@@ -158,9 +193,13 @@ export const ImageSlice = createSlice({
       state.images = action.payload.images;
       state.maxPage = action.payload.maxPage;
     });
+    builder.addCase(changeSortBy.fulfilled, (state, action) => {
+      state.images = action.payload.images;
+      state.maxPage = action.payload.maxPage;
+    });
   },
 });
 
 export default ImageSlice.reducer;
-export const { setPrevPage, setNextPage, setCategory, setSortBy } =
+export const { setPrevPage, setNextPage, setCategory, setSortBy, setError } =
   ImageSlice.actions;
