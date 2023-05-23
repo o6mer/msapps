@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { IImage } from "../../../store/slices/imagesSlice";
 import Dialog from "../../general/Dialog";
 

@@ -1,21 +1,19 @@
-import React, { ChangeEvent, useRef, useState } from "react";
+import React, { useState } from "react";
 import { useAppDispatch, useAppSelector } from "../../../store/store";
 import { changeCategory } from "../../../store/slices/imagesSlice";
 import Dialog from "../../general/Dialog";
 
 const CategorySelector = () => {
-  const selectedCategory = useAppSelector((state) => state.image.category);
-
   const [isDialogOpen, setIsDialogOpen] = useState(false);
 
+  const selectedCategory = useAppSelector((state) => state.image.category);
   const dispatch = useAppDispatch();
 
+  //Change the state and closes the dialog
   const handleCategoryChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const category = e.target.value;
 
     if (!category) return;
-
-    console.log(category);
 
     dispatch(changeCategory(category));
     setIsDialogOpen(false);

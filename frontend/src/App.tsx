@@ -7,6 +7,7 @@ function App() {
   const dispatch = useAppDispatch();
 
   useEffect(() => {
+    //Inital request the fetch the images when app is loaded
     dispatch(changeCategory("nature"));
   }, [dispatch]);
 

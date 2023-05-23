@@ -82,10 +82,13 @@ export const changeCategory = createAsyncThunk(
 export const getPrevPage = createAsyncThunk(
   "images/prevPage",
   async (_, thunkApi) => {
+    //Getting the current state
+    const imageState = thunkApi.getState().image;
+
     //Fetching the data
     const data = await fetchImages({
-      ...thunkApi.getState().image,
-      page: thunkApi.getState().image.page - 1,
+      ...imageState,
+      page: imageState.page - 1,
     });
 
     //Updating the state
@@ -98,9 +101,11 @@ export const getPrevPage = createAsyncThunk(
 export const getNextPage = createAsyncThunk(
   "images/nextPage",
   async (_, thunkApi) => {
+    const imageState = thunkApi.getState().image;
+
     const data = await fetchImages({
-      ...thunkApi.getState().image,
-      page: thunkApi.getState().image.page + 1,
+      ...imageState,
+      page: imageState.page + 1,
     });
     thunkApi.dispatch(setNextPage());
     return data;
