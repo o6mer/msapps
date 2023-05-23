@@ -1,11 +1,5 @@
-import {
-  PayloadAction,
-  createSlice,
-  createAsyncThunk,
-  ThunkDispatch,
-} from "@reduxjs/toolkit";
+import { PayloadAction, createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
-import { RootState } from "..//store";
 
 export interface IImage {
   id: number;
@@ -71,7 +65,7 @@ const fetchImages = async ({
   }
 };
 
-//Thunk function to change the image categoy. Update the state and fetch the data
+//Thunk function to change the image category. Update the state and fetch the data
 export const changeCategory = createAsyncThunk(
   "images/changeCategory",
   async (category: string, thunkApi) => {
@@ -182,20 +176,20 @@ export const ImageSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder.addCase(changeCategory.fulfilled, (state, action) => {
-      state.images = action.payload.images;
-      state.maxPage = action.payload.maxPage;
+      const { images, maxPage } = action.payload;
+      return { ...state, images, maxPage };
     });
     builder.addCase(getPrevPage.fulfilled, (state, action) => {
-      state.images = action.payload.images;
-      state.maxPage = action.payload.maxPage;
+      const { images } = action.payload;
+      return { ...state, images };
     });
     builder.addCase(getNextPage.fulfilled, (state, action) => {
-      state.images = action.payload.images;
-      state.maxPage = action.payload.maxPage;
+      const { images } = action.payload;
+      return { ...state, images };
     });
     builder.addCase(changeSortBy.fulfilled, (state, action) => {
-      state.images = action.payload.images;
-      state.maxPage = action.payload.maxPage;
+      const { images } = action.payload;
+      return { ...state, images };
     });
   },
 });

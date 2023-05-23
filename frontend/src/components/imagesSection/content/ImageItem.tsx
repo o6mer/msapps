@@ -12,11 +12,7 @@ const ImageItem = ({ imageData }: Props) => {
   return (
     <div>
       <button onClick={() => setIsDialogOpen(true)}>
-        <img
-          src={imageData.webformatURL}
-          key={imageData.id}
-          className="max-h-48"
-        />
+        <img src={imageData.webformatURL} key={imageData.id} />
       </button>
       <Dialog isOpen={isDialogOpen}>
         <div className="max-w-md overflow-x-hidden">
