@@ -3,9 +3,7 @@
 ## Table of Contents
 * [General info](#general-info)
 * [Technologies](#technologies)
-* [Main Features](#main-features)
 * [Setup](#setup)
-* [Contributing](#contributing)
 
 ## General Info
 An app the show images, sort them and devide into pages.
